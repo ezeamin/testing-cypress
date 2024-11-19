@@ -42,7 +42,7 @@ describe('US001 - Registro', () => {
   });
 });
 
-describe.skip('US002 - Login', () => {
+describe('US002 - Login', () => {
   beforeEach(() => {
     cy.visit('https://automationteststore.com/');
   });
@@ -74,5 +74,98 @@ describe.skip('US002 - Login', () => {
       'contain',
       'Error: Incorrect login or password provided.',
     );
+  });
+});
+
+describe('US003 - Llenar el carrito', () => {
+  beforeEach(() => {
+    cy.visit('https://automationteststore.com/');
+  });
+
+  it('TC-ATS-003-01 - Agregar producto al carrito', () => {
+    cy.get('#customer_menu_top > li > a').click();
+
+    cy.get('#loginFrm_loginname').type('elsapato-ats');
+
+    cy.get('#loginFrm_password').type('1234Abcd*');
+
+    cy.get('button[title=Login]').click();
+
+    cy.get('.menu_text').should('contain', 'elsa');
+
+    cy.get('#categorymenu > nav > ul > li:nth-child(4) > a').click();
+
+    cy.get(
+      '#maincontainer > div > div > div > div > div.thumbnails.grid.row.list-inline > div:nth-child(2) > div.thumbnail > div.pricetag.jumbotron > a',
+    ).click();
+
+    cy.get(
+      'body > div > header > div.container-fluid > div > div.block_7 > ul > li > a > span.label.label-orange.font14',
+    ).should('contain', '1');
+  });
+
+  it('TC-ATS-003-02 - Eliminar producto del carrito', () => {
+    cy.get('#customer_menu_top > li > a').click();
+
+    cy.get('#loginFrm_loginname').type('elsapato-ats');
+
+    cy.get('#loginFrm_password').type('1234Abcd*');
+
+    cy.get('button[title=Login]').click();
+
+    cy.get('.menu_text').should('contain', 'elsa');
+
+    cy.get('#categorymenu > nav > ul > li:nth-child(4) > a').click();
+
+    cy.get(
+      '#maincontainer > div > div > div > div > div.thumbnails.grid.row.list-inline > div:nth-child(2) > div.thumbnail > div.pricetag.jumbotron > a',
+    ).click();
+
+    cy.get(
+      'body > div > header > div.container-fluid > div > div.block_7 > ul > li > a',
+    ).click();
+
+    cy.get(
+      '#cart > div > div.container-fluid.cart-info.product-list > table > tbody > tr:nth-child(2) > td:nth-child(7) > a',
+    ).click();
+
+    cy.get('#maincontainer > div > div > div > div').should(
+      'contain',
+      'Your shopping cart is empty!',
+    );
+  });
+});
+
+describe('US004 - Compra', () => {
+  beforeEach(() => {
+    cy.visit('https://automationteststore.com/');
+  });
+
+  it('TC-ATS-004-01 - Realizar compra', () => {
+    cy.get('#customer_menu_top > li > a').click();
+
+    cy.get('#loginFrm_loginname').type('elsapato-ats');
+
+    cy.get('#loginFrm_password').type('1234Abcd*');
+
+    cy.get('button[title=Login]').click();
+
+    cy.get('.menu_text').should('contain', 'elsa');
+
+    cy.get('#categorymenu > nav > ul > li:nth-child(4) > a').click();
+
+    cy.get(
+      '#maincontainer > div > div > div > div > div.thumbnails.grid.row.list-inline > div:nth-child(2) > div.thumbnail > div.pricetag.jumbotron > a',
+    ).click();
+
+    cy.get(
+      'body > div > header > div.container-fluid > div > div.block_7 > ul > li > a',
+    ).click();
+
+    cy.get('#cart_checkout1').click();
+
+    cy.get('#checkout_btn').click();
+
+    cy.get('.maintext').should('contain', 'Your Order Has Been Processed!');
   });
 });
